@@ -1,0 +1,29 @@
+CREATE TABLE IF NOT EXISTS redemption_codes (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  code VARCHAR(50) UNIQUE NOT NULL,
+  is_used BOOLEAN DEFAULT FALSE,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  used_at TIMESTAMP WITH TIME ZONE
+);
+
+CREATE TABLE IF NOT EXISTS test_results (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  code_id UUID NOT NULL REFERENCES redemption_codes(id) ON DELETE CASCADE,
+  answers JSONB NOT NULL,
+  total_score INTEGER NOT NULL,
+  gsi DECIMAL(5,3) NOT NULL,
+  pst INTEGER NOT NULL,
+  psi DECIMAL(5,3) NOT NULL,
+  factor_scores JSONB NOT NULL,
+  severity VARCHAR(20) NOT NULL,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+INSERT INTO redemption_codes (code) VALUES 
+  ('TEST001'),
+  ('TEST002'),
+  ('TEST003'),
+  ('SCL90-2024-001'),
+  ('SCL90-2024-002'),
+  ('SCL90-2024-003')
+ON CONFLICT (code) DO NOTHING;
