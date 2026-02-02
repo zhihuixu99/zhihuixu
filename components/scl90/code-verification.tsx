@@ -42,21 +42,22 @@ export function CodeVerification({
 
     setIsLoading(true);
 
-    try {
-      const response = await fetch("/api/verify-code", {
+try {
+      // 【关键修改】：填入你部署好的 Worker 网址，结尾保留 /verify
+      const WORKER_URL = "https://restless-limit-308e.920542828.workers.dev/verify";
+
+      const response = await fetch(WORKER_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ code: code.trim() }),
+        body: JSON.stringify({ code: code.trim() }), 
       });
 
       const data = await response.json();
-
       if (!response.ok) {
         setError(data.error || "验证失败，请重试");
         return;
-      }
+      if (data.success) {
 
-      if (data.valid) {
         if (data.used && data.previousResult) {
           // 已使用，显示之前的结果
           onPreviousResult(data.previousResult);
