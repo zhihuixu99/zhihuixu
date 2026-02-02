@@ -55,8 +55,10 @@ export function Assessment() {
     const testResult = calculateResults(answers)
     
     try {
-      // 保存结果到数据库
-      const response = await fetch("/api/save-result", {
+      // 【关键修改】：把这里的 URL 换成你上面 Worker 的真实地址
+      const WORKER_URL = "https://你的worker名字.子域.workers.dev/save";
+      
+      const response = await fetch(WORKER_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -76,7 +78,6 @@ export function Assessment() {
     } catch (error) {
       console.error("保存结果错误:", error)
     }
-    
     setResult(testResult)
     setPhase("result")
     setIsSubmitting(false)
