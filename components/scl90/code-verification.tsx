@@ -32,7 +32,6 @@ export function CodeVerification({
     setIsLoading(true)
 
     try {
-      // 请确保这里的 URL 是你 Cloudflare Worker 的真实地址
       const WORKER_URL = "https://restless-limit-308e.920542828.workers.dev/verify";
 
       const response = await fetch(WORKER_URL, {
@@ -55,10 +54,10 @@ export function CodeVerification({
           onVerified(data.codeId || code.trim())
         }
       } else {
-        setError("验证失败，请联系客服")
+        setError("验证失败，请重试")
       }
     } catch (err) {
-      setError("网络错误，请稍后重试")
+      setError("网络错误，请检查网络后重试")
     } finally {
       setIsLoading(false)
     }
@@ -81,7 +80,7 @@ export function CodeVerification({
             <div className="space-y-2">
               <Input
                 type="text"
-                placeholder="请输入 6 位兑换码 (如 TEST001)"
+                placeholder="请输入兑换码 (如 TEST001)"
                 value={code}
                 onChange={(e) => setCode(e.target.value.toUpperCase())}
                 className="text-center text-lg tracking-widest uppercase"
@@ -111,9 +110,9 @@ export function CodeVerification({
               )}
             </Button>
             
-            <div className="text-sm text-muted-foreground bg-muted/50 p-4 rounded-lg">
+            <div className="text-sm text-muted-foreground bg-muted/50 p-4 rounded-lg text-center">
               <p className="font-medium mb-1">如何获取兑换码？</p>
-              <p>请前往我们的小红书店铺购买SCL-90心理测评服务，购买成功后将获得专属兑换码。</p>
+              <p>请联系管理员或前往店铺购买。</p>
             </div>
           </CardFooter>
         </form>
