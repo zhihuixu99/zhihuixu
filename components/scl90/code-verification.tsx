@@ -23,17 +23,14 @@ export function CodeVerification({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
-
     if (!code.trim()) {
       setError("请输入兑换码")
       return
     }
-
     setIsLoading(true)
 
     try {
-      const WORKER_URL = "https://restless-limit-308e.920542828.workers.dev/verify";
-
+      const WORKER_URL = "https://restless-limit-308e.920542828.workers.dev/verify"
       const response = await fetch(WORKER_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -43,7 +40,7 @@ export function CodeVerification({
       const data = await response.json()
 
       if (!response.ok) {
-        setError(data.error || "兑换码无效，请检查后重试")
+        setError(data.error || "兑换码无效")
         return
       }
 
@@ -54,10 +51,10 @@ export function CodeVerification({
           onVerified(data.codeId || code.trim())
         }
       } else {
-        setError("验证失败，请重试")
+        setError("验证失败")
       }
     } catch (err) {
-      setError("网络错误，请检查网络后重试")
+      setError("网络错误，请稍后重试")
     } finally {
       setIsLoading(false)
     }
@@ -72,48 +69,30 @@ export function CodeVerification({
               <Key className="w-8 h-8 text-primary" />
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold">SCL-90 心理健康自评量表</CardTitle>
-          <CardDescription>请输入您的兑换码开始测评</CardDescription>
+          <CardTitle className="text-2xl font-bold">SCL-90 测评</CardTitle>
+          <CardDescription>请输入兑换码开始</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Input
-                type="text"
-                placeholder="请输入兑换码 (如 TEST001)"
-                value={code}
-                onChange={(e) => setCode(e.target.value.toUpperCase())}
-                className="text-center text-lg tracking-widest uppercase"
-                maxLength={20}
-                disabled={isLoading}
-              />
-            </div>
-
+            <Input
+              type="text"
+              placeholder="请输入兑换码"
+              value={code}
+              onChange={(e) => setCode(e.target.value.toUpperCase())}
+              className="text-center text-lg uppercase"
+              disabled={isLoading}
+            />
             {error && (
-              <Alert variant="destructive" className="py-2">
+              <Alert variant="destructive">
                 <AlertCircle className="h-4 w-4" />
-                <AlertDescription className="text-sm">
-                  {error}
-                </AlertDescription>
+                <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
           </CardContent>
-          <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full text-lg h-12" disabled={isLoading}>
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  验证中...
-                </>
-              ) : (
-                "验证并开始测评"
-              )}
+          <CardFooter className="flex flex-col gap-4">
+            <Button type="submit" className="w-full h-12" disabled={isLoading}>
+              {isLoading ? <Loader2 className="animate-spin" /> : "验证开始"}
             </Button>
-            
-            <div className="text-sm text-muted-foreground bg-muted/50 p-4 rounded-lg text-center">
-              <p className="font-medium mb-1">如何获取兑换码？</p>
-              <p>请联系管理员或前往店铺购买。</p>
-            </div>
           </CardFooter>
         </form>
       </Card>
